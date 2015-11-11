@@ -4,11 +4,11 @@
 ## Prepare
 
 # Libraries
-#library(sqldf)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(caret)
+#library(sqldf)
 
 # Variables
 dirseparator <- "/"
