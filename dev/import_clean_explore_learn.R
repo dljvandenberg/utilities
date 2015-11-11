@@ -112,19 +112,28 @@ m.train <- createDataPartition(df.train.file$classe, p=.75, list = FALSE)
 df.training <- df.train.file[m.train,]
 df.testing <- df.train.file[-m.train,]
 df.predicting <- df.predict.file
-
-
-# TODO_CURRENT
-
-model.rf <- train(factor(y) ~ ., data=vowel.train, method="rf")
-model.gbm <- train(factor(y) ~ ., data=vowel.train, method="gbm")
-test.predictions.rf <- predict(model.rf, newdata=vowel.test)
-
-modelFit <- train(Class ~ ., method="rpart", data=training)
+# Train
+model.rpart <- train(factor(y) ~ ., data=training, method="rpart")
+model.gbm <- train(factor(y) ~ ., data=df.training, method="gbm")
+model.rf <- train(factor(y) ~ ., data=df.training, method="rf", trControl=trainControl(method="cv", number=10))
+# Model details
+model.rpart
+model.rpart$finalModel
+# Tree model visualization
 library(rattle)
-fancyRpartPlot(modelFit$finalModel)
-modelFit$finalModel
+fancyRpartPlot(model.rpart$finalModel)
+# Predict
+test.predictions.rf <- predict(model.rf, newdata=df.testing)
+# Confusion table and accuracy for testing set
+list.testing.results <- predict(model.best, newdata=df.testing)
+table(df.testing$classe, list.testing.results)
+sum(df.testing$classe == list.testing.results) / length(df.testing$classe)
+# Most important variables
+varImp(model.best)
 
+# Save/load model to/from file
+saveRDS(model.best, "model_rf.rds")
+# model <- readRDS("model_rf.rds")
 
 # Forecasting
 training = dat[year(dat$date) < 2012,]
@@ -134,28 +143,3 @@ library(forecast)
 bats.model <- bats(tstrain)
 forecast <- forecast(bats.model, h=length(testing$visitsTumblr), level=95)
 plot(forecast)
-
-# Set selected model and display
-model.best <- model.rf.2
-model.best
-model.best$finalModel
-
-# Confusion table and accuracy for training set
-list.training.results <- predict(model.best, newdata=df.training)
-table(df.training$classe, list.training.results)
-sum(df.training$classe == list.training.results) / length(df.training$classe)
-
-# Confusion table and accuracy for testing set
-list.testing.results <- predict(model.best, newdata=df.testing)
-table(df.testing$classe, list.testing.results)
-sum(df.testing$classe == list.testing.results) / length(df.testing$classe)
-
-# Most important variables
-varImp(model.best)
-
-# Save/load model to/from file
-saveRDS(model.best, "model_rf.rds")
-# model <- readRDS("model_rf.rds")
-
-# Predicting
-predict(model.best, df.predicting)
