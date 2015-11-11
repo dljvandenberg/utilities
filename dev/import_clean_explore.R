@@ -1,7 +1,7 @@
 ### Code template for data import/cleaning/exploration
 
 
-## Prepare
+## PREPARE
 
 # Libraries
 library(dplyr)
@@ -9,6 +9,7 @@ library(lubridate)
 library(ggplot2)
 library(caret)
 #library(sqldf)
+#library(GGally)
 
 # Variables
 dirseparator <- "/"
@@ -16,102 +17,94 @@ dir.wd <- "~/git/umcu_hackathon"
 dir.data <- paste(dir.wd, "data", sep=dirseparator)
 dir.output <- paste(dir.wd, "output", sep=dirseparator)
 url.data1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
-#url.data2 <- "https://"
 filepath.data1 <- paste(dir.data, "data1.csv", sep=dirseparator)
-#filepath.data2 <- paste(dir.data, "data2.csv", sep=dirseparator)
 
 # Workdir
 setwd(dir.wd)
 
 
-## Import
+## IMPORT
 
 download.file(url.data1, filepath.data1, method="curl")
-#download.file(url.data2, filepath.data2, method="curl")
-df.data1.raw <- read.csv(filepath.data1, na.strings=c("","#DIV/0!","NA"))
-#df.data2.raw <- read.csv(filepath.data2, na.strings=c("","#DIV/0!","NA"))
+df.data1.raw <- read.csv(filepath.data1, na.strings=c("","#DIV/0!","NA"), skip=5, header=FALSE, nrows=190, col.names=c("countrycode", "rank", "V3", "country", "gdp", "V6", "V7", "V8", "V9", "V10"))
+#df.data1.raw <- read.csv(filepath.data1, na.strings=c("","#DIV/0!","NA"))
 
 
-## TODO: Data Cleaning
+## CLEAN
 
-# CURRENT
-
-# df.gdp.raw <- read.csv(file, skip=5, header=FALSE, nrows=190, col.names=c("countrycode", "rank", "V3", "country", "gdp", "V6", "V7", "V8", "V9", "V10"))
-# df.gdp <- select(df.gdp.raw, c(1, 2, 4, 5))
-# df.gdp$gdp <- as.numeric(sapply(df.gdp$gdp, FUN=function(x) {gsub(x=x, pattern="(,| )", replacement="")}))
-# df.prices$Date <- mdy_hms(df.prices$Date)
-# names(df.gdp) <- c("countrycode", "ranking", "country", "gdp")
-# length(intersect(df.gdp$countrycode, df.edu$CountryCode))
-# summarize(group_by(df.merged, Income.Group), mean(ranking))
-# table(df.merged.quantiled$rankingquantile, df.merged.quantiled$Income.Group)
-
-# Aggregate mean values for each variable over "activity_name" and "subject" groups
-# df.averages <- aggregate(. ~ subject + activity_name, df.selected.set, FUN=mean)
-# Sort by "subject" and "activity_name"
-# df.averages <- arrange(df.averages, subject, activity_name)
-
-# selected1 <- sqldf("select pwgtp1 from acs where AGEP < 50")
-# selected2 <- sqldf("select distinct AGEP from acs")
-
+# Subsetting
+df.data1 <- select(df.data1.raw, c(1, 2, 4, 5))
+#len_OJ <- subset(ToothGrowth, supp=="OJ", len)
+# Convert to numeric
+df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, pattern="(,| )", replacement="")}))
+# Convert to date
+#df.data1$date <- mdy_hms(df.data1$date)
+# Set column names
+#names(df.data1) <- c("countrycode", "ranking", "country", "gdp")
 # Remove columns with only NA values
-df.training <- df.training[,colSums(is.na(df.training))<nrow(df.training)]
-
-split_data <- split(clean_data, data_without_na$State)
-
-
-
-## TODO: Combine multiple data sets (based on common variable, such as time)
-
-# df.merged <- merge(df.gdp, df.edu, by.x="countrycode", by.y="CountryCode")
-# df.merged.sorted <- arrange(df.merged, desc(ranking))
-
-
-## TODO: Exploratory analysis -> data set, plots
-
-qplot(data=NEI.Baltimore.emmissions.by.type.year, x=year, y=total_emissions, facets=. ~ type, ylab="PM2.5 emissions (tons)", main="Yearly PM2.5 emissions by type in Baltimore, MD") + geom_smooth(method="lm")
-qplot(num_window, pitch_belt, data=df.training, colour=classe, pch=user_name)
-
-hist(sample_variances, main=paste("Sample variances (n=", n, ", lambda=", lambda, ")", sep=""), xlab="Sample variance")
-boxplot(len ~ dose, data=ToothGrowth, xlab="dose", ylab="tooth length")
-qplot(dose, len, data=ToothGrowth, xlab="dose", ylab="tooth length", facets = . ~ supp) + geom_smooth(method="lm")
-
-tapply(ToothGrowth$len, list(supp=ToothGrowth$supp, dose=ToothGrowth$dose), mean)
+#df.training <- df.training[,colSums(is.na(df.training))<nrow(df.training)]
+# SQL queries
+#selected1 <- sqldf("select pwgtp1 from acs where AGEP < 50")
+#selected2 <- sqldf("select distinct AGEP from acs")
+# Sort by "subject" (ascending) and "activity_name" (descending)
+#df.averages <- arrange(df.averages, subject, desc(activity_name))
+# Split into subsets
+#split_data <- split(clean_data, data_without_na$State)
+# Merge data sets (based on common variable, such as time)
+#df.merged <- merge(df.gdp, df.edu, by.x="countrycode", by.y="CountryCode")
 
 
-## TODO: Find correlations between variables
+## EXPLORE
 
-corcoefficient <- cor(nitratedata,sulfatedata)
+# Table comparison
+#table(df.merged.quantiled$rankingquantile, df.merged.quantiled$Income.Group)
+# Group summary
+#summarize(group_by(df.data1, group), mean(gdp))
+# Aggregate mean values for each variable over "activity_name" and "subject" groups
+#df.averages <- aggregate(. ~ subject + activity_name, df.selected.set, FUN=mean)
+# Apply a Function to a Data Frame Split by Factors
+#tapply(ToothGrowth$len, list(supp=ToothGrowth$supp, dose=ToothGrowth$dose), mean)
+# Find correlations between variables
+#corcoefficient <- cor(nitratedata,sulfatedata)
 
+# Plots
+#hist(sample_variances, main="Sample variances", xlab="Variance")
+#boxplot(len ~ dose, data=ToothGrowth, xlab="dose", ylab="tooth length")
+#qplot(dose, len, data=ToothGrowth, xlab="dose", ylab="tooth length", facets = . ~ supp, colour=classe, pch=user_name) + geom_smooth(method="lm")
 
-
-## Inference
-
-len_OJ <- subset(ToothGrowth, supp=="OJ", len)
-len_VC <- subset(ToothGrowth, supp=="VC", len)
-t.test(len_VC, len_OJ, paired = FALSE, var.equal = FALSE)$conf
-
-
-## Regression
-
-anova(fit0, fit1, fit2)
-bestmodel <- lm(mpg ~ factor(am) + wt + hp, mtcars)
-summary(bestmodel)
-par(mfrow=c(1,2))
-plot(bestmodel, which=c(1,2))
-
+# Pairwise plots of variables
 data(mtcars)
+ggpairs(mtcars)
+
+
+## INFERENCE
+
+# T Test
+#t.test(len_VC, len_OJ, paired = FALSE, var.equal = FALSE)
+
+
+## REGRESSION
+
+# Find best multivariate regression model
 init_model <- lm(mpg ~ am + ., data = mtcars)
 best_model <- step(init_model, direction = "both")
+
+# Anova model selection
+fit1 <- lm(mpg ~ am, data = mtcars)
+fit2 <- lm(mpg ~ am + cyl, data = mtcars)
+fit3 <- lm(mpg ~ am + cyl + hp, data = mtcars)
+anova(fit1, fit2, fit3)
+
+# View model details
 summary(best_model)
+par(mfrow=c(1,2))
+plot(best_model, which=c(1,2))
 
-Multivariate regression:
-    * GGally package: ggpairs()
-
-glm(y ~ x, family=..)
+# Generalized Linear Model
+glm(y ~ x, family="binomial")
 
 
-
-## TODO: Machine Learning -> choose variable to predict and apply ML algorithms
+## TODO: MACHINE LEARNING
 
 training <- subset(segmentationOriginal, Case=='Train', select=-c(Case))
 testing <- subset(segmentationOriginal, Case=='Test', select=-c(Case))
@@ -121,7 +114,6 @@ modelFit <- train(Class ~ ., method="rpart", data=training)
 library(rattle)
 fancyRpartPlot(modelFit$finalModel)
 modelFit$finalModel
-
 
 # Divide into training, testing and predicting set
 m.train <- createDataPartition(df.train.file$classe, p=p.training, list = FALSE)
@@ -145,7 +137,6 @@ bats.model <- bats(tstrain)
 forecast <- forecast(bats.model, h=length(testing$visitsTumblr), level=95)
 plot(forecast)
 
-
 # Set selected model and display
 model.best <- model.rf.2
 model.best
@@ -167,7 +158,6 @@ varImp(model.best)
 # Save/load model to/from file
 saveRDS(model.best, "model_rf.rds")
 # model <- readRDS("model_rf.rds")
-
 
 # Predicting
 predict(model.best, df.predicting)
