@@ -104,29 +104,27 @@ plot(best_model, which=c(1,2))
 glm(y ~ x, family="binomial")
 
 
-## TODO: MACHINE LEARNING
+## MACHINE LEARNING
 
-training <- subset(segmentationOriginal, Case=='Train', select=-c(Case))
-testing <- subset(segmentationOriginal, Case=='Test', select=-c(Case))
-
+# Divide into training, testing and predicting set
 set.seed(1234)
+m.train <- createDataPartition(df.train.file$classe, p=.75, list = FALSE)
+df.training <- df.train.file[m.train,]
+df.testing <- df.train.file[-m.train,]
+df.predicting <- df.predict.file
+
+
+# TODO_CURRENT
+
+model.rf <- train(factor(y) ~ ., data=vowel.train, method="rf")
+model.gbm <- train(factor(y) ~ ., data=vowel.train, method="gbm")
+test.predictions.rf <- predict(model.rf, newdata=vowel.test)
+
 modelFit <- train(Class ~ ., method="rpart", data=training)
 library(rattle)
 fancyRpartPlot(modelFit$finalModel)
 modelFit$finalModel
 
-# Divide into training, testing and predicting set
-m.train <- createDataPartition(df.train.file$classe, p=p.training, list = FALSE)
-df.training <- df.train.file[m.train,]
-df.testing <- df.train.file[-m.train,]
-df.predicting <- df.predict.file
-
-inTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]
-training = adData[ inTrain,]
-testing = adData[-inTrain,]
-model.rf <- train(factor(y) ~ ., data=vowel.train, method="rf")
-model.gbm <- train(factor(y) ~ ., data=vowel.train, method="gbm")
-test.predictions.rf <- predict(model.rf, newdata=vowel.test)
 
 # Forecasting
 training = dat[year(dat$date) < 2012,]
