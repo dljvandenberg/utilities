@@ -58,10 +58,6 @@ df.training <- df.training[,colSums(is.na(df.training))<nrow(df.training)]
 
 split_data <- split(clean_data, data_without_na$State)
 
-## TODO: Exploratory analysis -> data set, plots
-
-qplot(data=NEI.Baltimore.emmissions.by.type.year, x=year, y=total_emissions, facets=. ~ type, ylab="PM2.5 emissions (tons)", main="Yearly PM2.5 emissions by type in Baltimore, MD") + geom_smooth(method="lm")
-qplot(num_window, pitch_belt, data=df.training, colour=classe, pch=user_name)
 
 
 ## TODO: Combine multiple data sets (based on common variable, such as time)
@@ -70,10 +66,48 @@ qplot(num_window, pitch_belt, data=df.training, colour=classe, pch=user_name)
 # df.merged.sorted <- arrange(df.merged, desc(ranking))
 
 
+## TODO: Exploratory analysis -> data set, plots
+
+qplot(data=NEI.Baltimore.emmissions.by.type.year, x=year, y=total_emissions, facets=. ~ type, ylab="PM2.5 emissions (tons)", main="Yearly PM2.5 emissions by type in Baltimore, MD") + geom_smooth(method="lm")
+qplot(num_window, pitch_belt, data=df.training, colour=classe, pch=user_name)
+
+hist(sample_variances, main=paste("Sample variances (n=", n, ", lambda=", lambda, ")", sep=""), xlab="Sample variance")
+boxplot(len ~ dose, data=ToothGrowth, xlab="dose", ylab="tooth length")
+qplot(dose, len, data=ToothGrowth, xlab="dose", ylab="tooth length", facets = . ~ supp) + geom_smooth(method="lm")
+
+tapply(ToothGrowth$len, list(supp=ToothGrowth$supp, dose=ToothGrowth$dose), mean)
+
 
 ## TODO: Find correlations between variables
 
 corcoefficient <- cor(nitratedata,sulfatedata)
+
+
+
+## Inference
+
+len_OJ <- subset(ToothGrowth, supp=="OJ", len)
+len_VC <- subset(ToothGrowth, supp=="VC", len)
+t.test(len_VC, len_OJ, paired = FALSE, var.equal = FALSE)$conf
+
+
+## Regression
+
+anova(fit0, fit1, fit2)
+bestmodel <- lm(mpg ~ factor(am) + wt + hp, mtcars)
+summary(bestmodel)
+par(mfrow=c(1,2))
+plot(bestmodel, which=c(1,2))
+
+data(mtcars)
+init_model <- lm(mpg ~ am + ., data = mtcars)
+best_model <- step(init_model, direction = "both")
+summary(best_model)
+
+Multivariate regression:
+    * GGally package: ggpairs()
+
+glm(y ~ x, family=..)
 
 
 
