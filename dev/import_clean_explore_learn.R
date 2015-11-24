@@ -26,8 +26,7 @@ setwd(dir.wd)
 ## IMPORT
 
 download.file(url.data1, filepath.data1, method="curl")
-df.data1.raw <- read.csv(filepath.data1, na.strings=c("","#DIV/0!","NA"), skip=5, header=FALSE, nrows=190, col.names=c("countrycode", "rank", "V3", "country", "gdp", "V6", "V7", "V8", "V9", "V10"))
-#df.data1.raw <- read.csv(filepath.data1, na.strings=c("","#DIV/0!","NA"))
+df.data1.raw <- read.csv(filepath.data1, na.strings=c("","#DIV/0!","NA"), skip=5, header=FALSE, nrows=190, colClasses=c("factor", "numeric", "Date", "Date", rep("factor",6), col.names=c("countrycode", "rank", "V3", "country", "gdp", "V6", "V7", "V8", "V9", "V10"))
 
 
 ## CLEAN
@@ -39,6 +38,8 @@ df.data1 <- select(df.data1.raw, c(1, 2, 4, 5))
 df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, pattern="(,| )", replacement="")}))
 # Convert to date
 #df.data1$date <- mdy_hms(df.data1$date)
+# Remove NAs
+#df.selected <- na.omit(df.selected)
 # Set column names
 #names(df.data1) <- c("countrycode", "ranking", "country", "gdp")
 # Remove columns with only NA values
