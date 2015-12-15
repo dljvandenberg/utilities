@@ -57,6 +57,11 @@ df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, patte
 
 ## EXPLORE
 
+# Summaries of the data
+# Check for missing data
+# Create exploratory plots
+# Perform exploratory analyses (e.g. clustering)
+
 # Table comparison
 #table(df.merged.quantiled$rankingquantile, df.merged.quantiled$Income.Group)
 # Group summary
@@ -76,6 +81,11 @@ df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, patte
 # Pairwise plots of variables
 data(mtcars)
 ggpairs(mtcars)
+#plot(ToothGrowth[, 1:4])
+
+# Clustering
+#hCluster = hclust(dist(t(trainSpam[, 1:57])))
+#plot(hCluster)
 
 
 ## INFERENCE
