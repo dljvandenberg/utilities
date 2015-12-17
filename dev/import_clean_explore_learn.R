@@ -80,6 +80,7 @@ df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, patte
 
 # Pairwise plots of variables
 data(mtcars)
+pairs(mtcars)
 ggpairs(mtcars)
 #plot(ToothGrowth[, 1:4])
 
