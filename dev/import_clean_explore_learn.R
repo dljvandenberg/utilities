@@ -3,6 +3,9 @@
 
 ## PREPARE
 
+# Print session info
+sessionInfo()
+
 # Libraries
 library(dplyr)
 library(lubridate)
@@ -53,6 +56,8 @@ df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, patte
 #split_data <- split(clean_data, data_without_na$State)
 # Merge data sets (based on common variable, such as time)
 #df.merged <- merge(df.gdp, df.edu, by.x="countrycode", by.y="CountryCode")
+# Reorder factor levels
+#data$EVTYPE<-reorder(data$EVTYPE, data$value)
 
 
 ## EXPLORE
@@ -77,6 +82,8 @@ df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, patte
 #hist(sample_variances, main="Sample variances", xlab="Variance")
 #boxplot(len ~ dose, data=ToothGrowth, xlab="dose", ylab="tooth length")
 #qplot(dose, len, data=ToothGrowth, xlab="dose", ylab="tooth length", facets = . ~ supp, colour=classe, pch=user_name) + geom_smooth(method="lm")
+#plot1 <- ggplot(data, aes(x=EVTYPE, y=value, group = variable, order=EVTYPE, fill = variable))
+#plot1 + geom_bar(stat="identity") + xlab("Event") + ylab("Number of incidents") + ggtitle("Title") + coord_flip()
 
 # Pairwise plots of variables
 data(mtcars)
