@@ -8,6 +8,7 @@ sessionInfo()
 
 # Libraries
 library(dplyr)
+library(reshape2)
 library(lubridate)
 library(ggplot2)
 library(caret)
@@ -58,6 +59,9 @@ df.data1$gdp <- as.numeric(sapply(df.data1$gdp, FUN=function(x) {gsub(x=x, patte
 #df.merged <- merge(df.gdp, df.edu, by.x="countrycode", by.y="CountryCode")
 # Reorder factor levels
 #data$EVTYPE<-reorder(data$EVTYPE, data$value)
+# Melt and cast data (reshape2)
+#data<-melt(data, id="EVTYPE", measure.vars = c("FATALITIES","INJURIES"))
+#data<-dcast(data, EVTYPE~variable, function(x) sum(x, na.rm=TRUE))
 
 
 ## EXPLORE
