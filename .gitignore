@@ -1,15 +1,37 @@
-# History files
-.Rhistory
+# R
+*.Rhistory
+*.RData
+*.Ruserdata
+*.Rproj
+.Rproj.user
 .Rapp.history
-
-# Example code in package build process
 *-Ex.R
-
-# RStudio files
-.Rproj.user/
-.RData
-
-# produced vignettes
 vignettes/*.html
 vignettes/*.pdf
-.Rproj.user
+
+# tex
+*.log
+*.tuc
+*.aux
+*.nav
+*.out
+*.snm
+*.toc
+*.vimout
+*.vrb
+
+# Python
+.ipynb_checkpoints/
+__pycache__
+
+# Vagrant 
+.vagrant/*
+.vagrant
+
+# Mac OS
+.DS_Store
+
+# Other
+*/temp/*
+temp.*
+
