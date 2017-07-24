@@ -1,0 +1,62 @@
+---
+title: "Split time periods"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(lubridate)
+library(plyr)
+library(dplyr)
+```
+
+# Test dataframe (for input)
+
+```{r}
+# Create test dataframe
+startdates <- ymd(c("2017-10-29", "2017-11-01", "2017-11-02"))
+enddates <- ymd(c("2017-11-04", "2017-11-04", "2017-11-03"))
+df <- data.frame(startdate = startdates, enddate = enddates, var1=c(1,2,3), var2=c(2,4,7))
+
+df
+```
+
+# Convert dateframe with date periods into dataframe with date entry for each line
+
+```{r warning=FALSE}
+# For single line in df, return dateframe with multiple lines,
+# each one for date in period between startdate and enddate of input line
+split_line_into_multiple_lines <- function(line){
+  # Extract startdate and enddate
+  startdate <- line$startdate
+  enddate <- line$enddate
+
+  # Create date sequence from startdate till enddate
+  dates <- seq(startdate, enddate, by=1)
+
+  # Extract all variables within 'line' besides startdate and enddate
+  othervariables <- subset(line, select = -c(startdate, enddate))
+
+  # Create dataframe where each row has single date and othervariables have same values
+  df <- data.frame(date = dates, othervariables)
+  
+  return(df)
+}
+
+# Apply split_line_into_multiple_lines function to each line
+df_long <- adply(df, 1, split_line_into_multiple_lines) %>%
+  subset(select=-c(startdate, enddate))
+```
+
+```{r warning=FALSE}
+df_long
+```
+
+# Aggregate over entries with same date
+
+```{r warning=FALSE}
+# Aggregate over entries with same date
+df_long %>%
+  aggregate(data=., cbind(var1, var2) ~ date, FUN=max)
+```
